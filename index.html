@@ -1,0 +1,161 @@
+﻿<html>
+	<head>
+		<title>
+			Пятнашки
+		</title>
+		<style>
+			body{
+				background-color: black;
+			}
+			h1{
+				color: orange;
+				font-family: impact;
+			}
+			table{
+				background-color: orange;
+				margin: 60;
+			}
+			canvas{
+				float: left;
+				margin: 20;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>
+			Пятнашки от Сашки
+		</h1>
+		<canvas  id="myCanvas" width="400" height="400"></canvas>
+		<table>
+			<tr>
+				<td></td>
+				<td><img src="up.png" width="100" onmousedown="moveUp();" onmouseup="checkWin();"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><img src="left.png" width="100" onmousedown="moveLeft();" onmouseup="checkWin();"></td>
+				<td></td>
+				<td><img src="right.png" width="100" onmousedown="moveRight();" onmouseup="checkWin();"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><img src="down.png" width="100" onmousedown="moveDown();" onmouseup="checkWin();"></td>
+				<td></td>
+			</tr>
+		</table>
+		<h1 id="moves">Сделано ходов: </h1>
+		<script type="text/javascript">
+			
+			var Piece = function(x,y) {
+				this.ix = x;
+				this.iy = y;
+				this.x = x;
+				this.y = y;
+			};
+			
+			var img = new Image();
+			img.src = "image.jpg";
+			
+			var pieces = new Array();
+			var winner = new Array();
+			var moves = 0;
+
+			var canvas = document.getElementById('myCanvas');
+			var ctx = canvas.getContext('2d');
+			
+			for(var i = 0; i < 400; i = i + 100) {
+				for(var j = 0; j < 400; j = j + 100){
+					pieces.push(new Piece(i,j));
+					winner.push(new Piece(i,j));
+				};
+			};
+			
+			function moveUp() {
+				for(var i = 0; i < 15; i++) {
+					if(pieces[i].x == pieces[15].x && pieces[i].y == pieces[15].y - 100) {
+						reDraw(i);
+						break;
+					};
+				};
+			};
+			
+			function moveDown() {
+				for(var i = 0; i < 15; i++) {
+					if(pieces[i].x == pieces[15].x && pieces[i].y == pieces[15].y + 100) {
+						reDraw(i);
+						break;
+					};
+				};
+			};
+			
+			function moveRight() {
+				for(var i = 0; i < 15; i++) {
+					if(pieces[i].x == pieces[15].x + 100 && pieces[i].y == pieces[15].y) {
+						reDraw(i);
+						break;
+					};
+				};
+			};
+			
+			function moveLeft() {
+				for(var i = 0; i < 15; i++) {
+					if(pieces[i].x == pieces[15].x - 100 && pieces[i].y == pieces[15].y) {
+						reDraw(i);
+						break;
+					};
+				};
+			};
+			
+			function reDraw(i) {
+				var x1 = pieces[15].x;
+				var y1 = pieces[15].y;
+				pieces[15].x = pieces[i].x;
+				pieces[15].y = pieces[i].y;
+				pieces[i].x = x1;
+				pieces[i].y = y1;
+				ctx.drawImage(img,pieces[i].ix,pieces[i].iy,100,100,pieces[i].x,pieces[i].y,100,100);
+				ctx.clearRect(pieces[15].x,pieces[15].y,100,100);
+			};
+			
+			function checkWin() {
+				moves++;
+				document.getElementById("moves").innerHTML = "Сделано ходов: " + moves;
+				var w = 0;
+				for(var i = 0; i < 15; i++) {
+					if(pieces[i].x == winner[i].x && pieces[i].y == winner[i].y) {
+						w++;
+					}
+					else {
+						break;
+					}
+				};
+				if(w == 15) {
+					alert("ГЫГЫ за " + moves +" хода");
+				}
+			};
+			
+			window.onload = function() {
+				for(var i = 0; i < 15; i++) {
+					ctx.drawImage(img,pieces[i].ix,pieces[i].iy,100,100,pieces[i].x,pieces[i].y,100,100);
+				};
+				
+				for(var i = 0; i < 1000; i++) {
+					var j = Math.floor(Math.random()*3.9999);
+					if(j == 0) {
+						moveUp();
+					}
+					else if(j == 1) {
+						moveDown();
+					}
+					else if(j == 2) {
+						moveRight();
+					}
+					else if(j == 3) {
+						moveLeft();
+					}
+				};
+				
+			};
+		</script>
+	</body>
+</html>
